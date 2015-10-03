@@ -109,8 +109,9 @@ map <C-w>t :tabe<cr>
 map <Leader>u :bNext<CR>
 cnoremap <expr> %% expand('%:h').'/'
 
-" Complete if there is text preceding, tab elsewhere
-" inoremap <expr> <tab> InsertTabWrapper()
-inoremap <s-tab> <c-n>
 imap <C-k> <space>=><space>
+
+command! InsertTime :normal a<c-r>=strftime('%F %H:%M:%S.0 %z')<cr>
+command! FindConditionals :normal /\<if\>\|\<unless\>\|\<and\>\|\<or\>\|||\|&&<cr>
+
 
