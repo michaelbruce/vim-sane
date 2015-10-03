@@ -2,11 +2,11 @@
 " Author:       Michael Bruce <http://focalpointer.org/>
 " Version:      0.1
 
-if exists('g:loaded_execute')
+if exists('g:loaded_sane')
   finish
 endif
 
-let g:loaded_execute = 1
+let g:loaded_sane = 1
 
 set nocp " First things first, nocompatible mode.
 set shortmess+=Ixmn " disables startup message, among other things :help!
@@ -28,8 +28,8 @@ set autoindent " copy indentation from previous line.
 set expandtab " use spaces, not tabs characters
 set smarttab " sw at the start of the line, sts everywhere else
 
-set scrolloff=1 " scroll before the cursor is at the screen edge
-set sidescrolloff=5
+set autoread " reload a file that has changes outside vim
+set autowrite " automatically save before commands like :next and :make
 
 " Display settings
 set showmatch " Show matching brackets
@@ -37,6 +37,13 @@ set list " Display trailing whitespace
 set nowrap " lines should stay as lines.
 set cursorline
 set lazyredraw
+set timeoutlen=1200 " A little bit more time for macros
+set ttimeoutlen=50  " Make Esc work faster
+set regexpengine=1 " use old regexp engine, it handles ruby better
+set ttyfast
+set scrolloff=1 " scroll before the cursor is at the screen edge
+set sidescrolloff=5
+set number
 
 " Search preferences
 set scs " Case insensitive searches become sensitive with capitals
@@ -49,6 +56,7 @@ set wildmode=longest:full,full
 set wildignore+=tags,.*.un~,*.pyc
 set wildignorecase
 set showcmd " autocomplete commands
+set completeopt=menuone,longest
 
 " Folding
 set foldmethod=marker
@@ -56,9 +64,9 @@ set foldopen+=jump
 
 " Customise display characters used
 if (&termencoding ==# 'utf-8' || &encoding ==# 'utf-8') && version >= 700
-let &listchars = "tab:\u21e5\u00b7,trail:\u2423,extends:\u21c9,precedes:\u21c7,nbsp:\u26ad"
+  let &listchars = "tab:\u21e5\u00b7,trail:\u2423,extends:\u21c9,precedes:\u21c7,nbsp:\u26ad"
 else
-set listchars=tab:>\ ,trail:-,extends:>,precedes:<
+  set listchars=tab:>\ ,trail:-,extends:>,precedes:<
 endif
 
 " Backup settings
@@ -67,6 +75,11 @@ set nowritebackup
 set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 set viminfo=!,'20,<50,s10,h
+
+set history=200
+set diffopt=filler,vertical " Options for vimdiff
+runtime macros/matchit.vim " use % to jump between start/end of methods
+set textwidth=0
 
 " Better navigation - :e #<NUM & :b TAB/filename OR b<num>
 map <C-h> <C-w>h
@@ -114,4 +127,13 @@ imap <C-k> <space>=><space>
 command! InsertTime :normal a<c-r>=strftime('%F %H:%M:%S.0 %z')<cr>
 command! FindConditionals :normal /\<if\>\|\<unless\>\|\<and\>\|\<or\>\|||\|&&<cr>
 
-
+augroup sanetypes
+  " Auto indent xml files
+  au FileType xml exe ":silent 1,$!xmllint --format --recover - 2>/dev/null"
+  autocmd BufNewFile,BufReadPost *.md set filetype=markdown
+  autocmd FileType python,haskell setlocal ts=4 sw=4 sts=4
+  autocmd BufNewFile,BufRead {.,}tmux*.conf* setfiletype tmux
+  autocmd bufwritepost .vimrc source ~/.vimrc
+  " Open files at the last viewed position
+  autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif
+augroup END
