@@ -121,9 +121,34 @@ imap <C-a> <C-o>^
 map <C-w>t :tabe<cr>
 map <Leader>u :bNext<CR>
 cnoremap <expr> %% expand('%:h').'/'
+nmap cx :set cursorline! cursorline?<CR>
+nmap gw :e ~/Workspace/
 
 imap <C-k> <space>=><space>
 
+fu! DateAndWake()
+  let current_hour = system("date +%H")
+  let current_minute = system("date +%M")
+  let current_time_stamp = system("echo -n $(date)")
+
+  let wake_time = 6
+
+  let hours_left = (23 - current_hour) + wake_time
+  if (current_hour <= 5)
+    let hours_left = wake_time - current_hour
+  end
+
+  let minutes_left = (60 - current_minute)
+  if (minutes_left <= 9)
+    let minutes_left = "0" . minutes_left
+  endif
+
+  let time_left = hours_left . "h" . minutes_left
+
+  echom current_time_stamp . ", tt6: " . time_left
+endf
+
+command! DateAndWake :call DateAndWake()
 command! InsertTime :normal a<c-r>=strftime('%F %H:%M:%S.0 %z')<cr>
 command! FindConditionals :normal /\<if\>\|\<unless\>\|\<and\>\|\<or\>\|||\|&&<cr>
 
