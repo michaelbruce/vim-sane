@@ -40,14 +40,11 @@ set autowrite " automatically save before commands like :next and :make
 set showmatch " Show matching brackets
 set list " Display trailing whitespace
 set nowrap " lines should stay as lines.
-set cursorline
-set lazyredraw
 set timeout
 set timeoutlen=1200 " A little bit more time for macros
 set ttimeoutlen=50  " Make Esc work faster
 set scrolloff=3 " scroll before the cursor is at the screen edge
 set sidescrolloff=5
-set number
 set showtabline=1 " show tab bar when there are multiple in use
 
 " Search preferences
@@ -65,7 +62,7 @@ set showcmd " autocomplete commands
 set completeopt=menuone,longest
 
 " No folding thanks
-set foldmethod=method
+set foldmethod=manual
 set nofoldenable
 
 " Customise display characters used
@@ -109,6 +106,7 @@ map <C-s> :w<cr>
 imap <C-s> <esc>:w<cr>
 
 " Stunt jump
+imap <c-c> <esc>
 map <CR> o<esc>
 map <BS> :nohls<cr>
 map Q @q
@@ -119,12 +117,15 @@ map <C-w>t :tabe<cr>
 map <Leader>u :bNext<CR>
 cnoremap <expr> %% expand('%:h').'/'
 nmap cx :set cursorline! cursorline?<CR>
-nmap gw :e ~/Workspace/
+nmap gw :e ~/code/
+" remap quickly
+map \ :map \ :w\\|:!
 
 imap <C-k> <space>=><space>
 
 command! InsertTime :normal a<c-r>=strftime('%F %H:%M:%S.0 %z')<cr>
 command! FindConditionals :normal /\<if\>\|\<unless\>\|\<and\>\|\<or\>\|||\|&&<cr>
+command! -range Md5 :echo system('echo '.shellescape(join(getline(<line1>, <line2>), '\n')) . '| md5')
 
 " Normally, Vim messes with iskeyword when you open a shell file. This can
 " leak out, polluting other file types even after a 'set ft=' change. This
@@ -136,13 +137,13 @@ set modelines=3
 
 augroup sanetypes
   " Auto indent xml files
+  au SwapExists * let v:swapchoice = 'e'
   au FileType xml exe ":silent 1,$!xmllint --format --recover - 2>/dev/null"
   autocmd BufNewFile,BufReadPost *.md set filetype=markdown
   autocmd FileType ruby,haml,eruby,yaml,html,javascript,sass,cucumber set ai sw=2 sts=2 et
   autocmd BufNewFile,BufRead {.,}tmux*.conf* setfiletype tmux
   autocmd BufRead *.mkd  set ai formatoptions=tcroqn2 comments=n:&gt;
   autocmd BufRead *.markdown  set ai formatoptions=tcroqn2 comments=n:&gt;
-  autocmd! FileType mkd setlocal syn=off
   autocmd! BufNewFile,BufRead *.md setlocal ft=
   autocmd bufwritepost .vimrc source ~/.vimrc
   " Open files at the last viewed position
