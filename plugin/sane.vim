@@ -15,10 +15,13 @@ set cb=unnamed,unnamedplus " Link clipboard to system clipboard on osx & linux.
 set t_ti= t_te= " Prevents vim having it's own terminal space
 set t_Co=256
 
-set encoding=utf-8
+if !has('nvim')
+    set encoding=utf-8
+    silent! set ttymouse=xterm2 " Fixes delayed tmux mouse issue
+endif
+
 set fileformats=unix,dos,mac " sets the <EOL> chars etc to use
 set hls mouse=a bs=2 is
-silent! set ttymouse=xterm2 " Fixes delayed tmux mouse issue
 set hidden " keep buffers available after closing
 
 set tabstop=4
@@ -46,6 +49,7 @@ set ttimeoutlen=50  " Make Esc work faster
 set scrolloff=3 " scroll before the cursor is at the screen edge
 set sidescrolloff=5
 set showtabline=1 " show tab bar when there are multiple in use
+set laststatus=1 " only show the status bar when there are multiple in use
 
 " Search preferences
 set scs " Case insensitive searches become sensitive with capitals
