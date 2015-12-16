@@ -111,8 +111,6 @@ imap <C-s> <esc>:w<cr>
 
 " Stunt jump
 imap <c-c> <esc>
-map <CR> o<esc>
-map <BS> :nohls<cr>
 map Q @q
 map Y y$
 imap <C-e> <C-o>$
