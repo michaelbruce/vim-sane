@@ -21,7 +21,7 @@ if !has('nvim')
 endif
 
 set fileformats=unix,dos,mac " sets the <EOL> chars etc to use
-set hls mouse=a bs=2 is
+set hls bs=2 is mouse=
 set hidden " keep buffers available after closing
 
 set tabstop=4
