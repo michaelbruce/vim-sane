@@ -157,3 +157,29 @@ augroup sanetypes
   autocmd! CmdwinLeave * :call MapCR()
 
 augroup END
+
+" Handy Functions
+function! RemoveFancyCharacters() " Remove smart quotes, etc.
+    let typo = {}
+    let typo["“"] = '"'
+    let typo["”"] = '"'
+    let typo["‘"] = "'"
+    let typo["’"] = "'"
+    let typo["–"] = '--'
+    let typo["—"] = '---'
+    let typo["…"] = '...'
+    :exe ":%s/".join(keys(typo), '\|').'/\=typo[submatch(0)]/ge'
+endfunction
+command! RemoveFancyCharacters :call RemoveFancyCharacters()
+
+function! TrimWhitespace()
+  if !&binary && &filetype != 'diff'
+    normal mz
+    normal Hmy
+    %s/\s\+$//e
+    normal 'yz<CR>
+    normal `z
+  endif
+endfunction
+command! TrimWhitespace :call TrimWhitespace()
+command! FixSyntax :sync syntax fromstart
