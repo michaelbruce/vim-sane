@@ -183,3 +183,9 @@ function! TrimWhitespace()
 endfunction
 command! TrimWhitespace :call TrimWhitespace()
 command! FixSyntax :sync syntax fromstart
+
+function! SyntaxGroupCheck()
+  echo synIDattr(synID(line("."),col("."),1),"name")
+endfunction
+
+command! SyntaxGroupCheck :call SyntaxGroupCheck()
