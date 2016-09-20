@@ -179,6 +179,7 @@ function! TrimWhitespace()
     %s/\s\+$//e
     normal 'yz<CR>
     normal `z
+    :retab
   endif
 endfunction
 command! TrimWhitespace :call TrimWhitespace()
