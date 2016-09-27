@@ -153,8 +153,9 @@ augroup sanetypes
 
   " Leave the return key alone when in command line windows, since it's used
   " to run commands there.
-  autocmd! CmdwinEnter * :unmap <cr>
-  autocmd! CmdwinLeave * :call MapCR()
+  " unmap command throw error when closing fireplace command line split
+  " autocmd! CmdwinEnter * :unmap <cr>
+  " autocmd! CmdwinLeave * :call MapCR()
 
 augroup END
 
